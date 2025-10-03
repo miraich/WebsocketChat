@@ -37,8 +37,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6.0.0
+      - name: Build and analyze with SonarQube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+        run: |
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar |
+          -Dsonar.token=$SONAR_TOKEN -Dsonar.organization=$SONAR_ORGANIZATION
+          

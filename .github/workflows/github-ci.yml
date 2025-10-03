@@ -38,8 +38,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze with SonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar |
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }} |
-          -Dsonar.organization= ${{ secrets.SONAR_ORGANIZATION }}
+          -Dsonar.token=$SONAR_TOKEN -Dsonar.organization=$secrets.SONAR_ORGANIZATION
           

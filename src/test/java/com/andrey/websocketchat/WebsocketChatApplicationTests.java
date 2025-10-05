@@ -8,6 +8,7 @@ class WebsocketChatApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

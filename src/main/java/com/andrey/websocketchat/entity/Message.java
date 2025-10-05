@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Message {
     private UUID id;
     private User from;
-    private ChatRoom room;
+    private Chat room;
     private String content;
     private Instant timestamp;
 }

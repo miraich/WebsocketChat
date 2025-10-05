@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ChatRoom {
+public class Chat {
     private UUID id;
 //    private String name;
     private Set<User> members;

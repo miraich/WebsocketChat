@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record MessageRs(
         UUID id,
-        UUID chatId,
+//        UUID chatId,
         String from,
         String content,
         Instant timestamp

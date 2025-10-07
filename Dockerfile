@@ -12,5 +12,7 @@ FROM openjdk:23-jdk
 WORKDIR /app
 ADD https://curl.se/download/curl-8.13.0.tar.gz .
 RUN tar xzvf curl-8.13.0.tar.gz
+ADD https://launchpad.net/ubuntu/'+'archive/primary/'+'sourcefiles/openssl/3.0.8-1ubuntu1.1/openssl_3.0.8.orig.tar.gz .
 COPY --from=BUILD ./build/target ./target
-CMD ["java","-jar","target/WebsocketChat-0.0.1-SNAPSHOT.jar"]
+COPY entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]

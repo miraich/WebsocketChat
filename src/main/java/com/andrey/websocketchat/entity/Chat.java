@@ -16,6 +16,6 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 public class Chat {
     private UUID id;
-//    private String name;
+    //    private String name;
     private Set<User> members;
 }

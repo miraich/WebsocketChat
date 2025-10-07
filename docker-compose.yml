@@ -12,9 +12,10 @@ services:
     restart: unless-stopped
 
   backend:
-    build: .
-#    image: atread/websocker_chat:v0.0.2
+#    build: .
+    image: atread/websocker_chat:v0.0.2
     container_name: websocket-chat-app
+    pull_policy: always
     environment:
       DB_HOST: postgres
     ports:

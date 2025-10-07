@@ -1,4 +1,4 @@
-package com.andrey.websocketchat.dto.User;
+package com.andrey.websocketchat.dto.user;
 
 import java.util.UUID;
 

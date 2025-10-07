@@ -2,6 +2,7 @@ package com.andrey.websocketchat.service;
 
 import com.andrey.websocketchat.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -11,6 +12,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Service
+@Profile("!test")
 @RequiredArgsConstructor
 public class JwtService {
     private final JwtEncoder jwtEncoder;

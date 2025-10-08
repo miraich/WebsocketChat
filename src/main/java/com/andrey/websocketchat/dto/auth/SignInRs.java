@@ -7,7 +7,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Builder(toBuilder = true)
 public record SignInRs(
-
         UserRs user,
 
         String token

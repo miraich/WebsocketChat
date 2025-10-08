@@ -1,6 +1,6 @@
 package com.andrey.websocketchat.repository;
 
-import com.andrey.websocketchat.entity.User;
+import com.andrey.websocketchat.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

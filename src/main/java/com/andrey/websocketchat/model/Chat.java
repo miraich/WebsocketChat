@@ -1,4 +1,4 @@
-package com.andrey.websocketchat.entity;
+package com.andrey.websocketchat.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -14,10 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Message {
+public class Chat {
     private UUID id;
-    private User from;
-    private Chat room;
-    private String content;
-    private Instant timestamp;
+    //    private String name;
+    private Set<User> members;
 }

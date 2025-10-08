@@ -1,4 +1,4 @@
-package com.andrey.websocketchat.entity;
+package com.andrey.websocketchat.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,13 +11,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
-import java.util.Collection;
-import java.util.List;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -42,14 +38,4 @@ public class User implements UserDetails {
     private String password;
 
     private String role;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
 }

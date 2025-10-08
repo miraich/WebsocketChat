@@ -4,7 +4,7 @@ import com.andrey.websocketchat.dto.auth.SignInRq;
 import com.andrey.websocketchat.dto.auth.SignInRs;
 import com.andrey.websocketchat.dto.auth.SignUpRq;
 import com.andrey.websocketchat.dto.auth.SignUpRs;
-import com.andrey.websocketchat.entity.AuthenticationResult;
+import com.andrey.websocketchat.model.AuthenticationResult;
 import com.andrey.websocketchat.mapper.AuthMapper;
 import com.andrey.websocketchat.mapper.UserMapper;
 import com.andrey.websocketchat.service.AuthManagementService;
@@ -31,12 +31,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public SignUpRs register(@RequestBody @Valid SignUpRq signUpRq) {
         AuthenticationResult result = authManagementService.registerUser(userMapper.map(signUpRq));
-        return authMapper.mapToSingUpRs(result.user(), result.token());
+        return authMapper.mapToSignUpRs(result.user(), result.token());
     }
 
     @PostMapping("/login")
     public SignInRs login(@RequestBody @Valid SignInRq signInRq) {
         AuthenticationResult result = authManagementService.login(userMapper.map(signInRq));
-        return authMapper.mapToSingInRs(result.user(), result.token());
+        return authMapper.mapToSignInRs(result.user(), result.token());
     }
 }

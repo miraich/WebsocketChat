@@ -1,11 +1,9 @@
 package com.andrey.websocketchat.service.entity;
 
-import com.andrey.websocketchat.entity.User;
+import com.andrey.websocketchat.model.User;
 import com.andrey.websocketchat.exception.EntityAlreadyExistsException;
 import com.andrey.websocketchat.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
         }
-
         return save(user);
     }
 
@@ -35,15 +32,6 @@ public class UserService {
     public User getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("user with name %s not found", username)));
-    }
-
-    public UserDetailsService userDetailsService() {
-        return this::getByUsername;
-    }
-
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
     }
 
     public boolean existsByName(String name) {

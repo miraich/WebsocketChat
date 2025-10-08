@@ -3,7 +3,7 @@ package com.andrey.websocketchat.mapper;
 import com.andrey.websocketchat.config.MapstructConfig;
 import com.andrey.websocketchat.dto.auth.SignInRq;
 import com.andrey.websocketchat.dto.auth.SignUpRq;
-import com.andrey.websocketchat.entity.User;
+import com.andrey.websocketchat.model.User;
 import org.mapstruct.Mapper;
 
 @Mapper(config = MapstructConfig.class)

@@ -1,6 +1,6 @@
 package com.andrey.websocketchat.service;
 
-import com.andrey.websocketchat.entity.User;
+import com.andrey.websocketchat.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -23,9 +23,9 @@ public class JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("websocket-chat-app")
                 .issuedAt(now)
-                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(30, ChronoUnit.MINUTES))
                 .subject(user.getId().toString())
-                .claim("scope", user.getRole())
+                .claim("role", user.getRole())
                 .claim("username", user.getUsername())
                 .claim("type", "access")
                 .build();
@@ -41,7 +41,7 @@ public class JwtService {
                 .issuedAt(now)
                 .expiresAt(now.plus(7, ChronoUnit.DAYS))
                 .subject(user.getId().toString())
-                .claim("type", "refresh") // можно различать по claim
+                .claim("type", "refresh")
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

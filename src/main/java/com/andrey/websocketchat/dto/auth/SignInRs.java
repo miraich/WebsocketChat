@@ -1,5 +1,6 @@
 package com.andrey.websocketchat.dto.auth;
 
+import com.andrey.websocketchat.dto.user.UserRs;
 import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
 
@@ -7,8 +8,8 @@ import lombok.extern.jackson.Jacksonized;
 @Builder(toBuilder = true)
 public record SignInRs(
 
-        String username,
+        UserRs user,
 
-        String password
+        String token
 ) {
 }

@@ -6,6 +6,8 @@ import com.andrey.websocketchat.exception.EntityAlreadyExistsException;
 import com.andrey.websocketchat.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +26,17 @@ public class AuthManagementService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         User savedUser = userService.save(user);
-        String token = jwtService.generateToken(savedUser);
+        String token = jwtService.generateAccessToken(savedUser);
         return new AuthenticationResult(savedUser, token);
     }
 
     public AuthenticationResult login(User user) {
+        UsernamePasswordAuthenticationToken authToken
+                = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         user = userService.getByUsername(user.getUsername());
-        String token = jwtService.generateToken(user);
+
+        System.out.println(authToken.getName());
+        String token = jwtService.generateAccessToken(user);
         return new AuthenticationResult(user, token);
     }
 }

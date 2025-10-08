@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public SignInRs login(@RequestBody @Valid SignInRq signInRq) {
-        AuthenticationResult result = authManagementService.registerUser(userMapper.map(signInRq));
+        AuthenticationResult result = authManagementService.login(userMapper.map(signInRq));
         return authMapper.mapToSingInRs(result.user(), result.token());
     }
 }

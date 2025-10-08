@@ -17,7 +17,23 @@ import java.time.temporal.ChronoUnit;
 public class JwtService {
     private final JwtEncoder jwtEncoder;
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("websocket-chat-app")
+                .issuedAt(now)
+                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
+                .subject(user.getId().toString())
+                .claim("scope", user.getRole())
+                .claim("username", user.getUsername())
+                .claim("type", "access")
+                .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public String generateRefreshToken(User user) {
         Instant now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -25,7 +41,7 @@ public class JwtService {
                 .issuedAt(now)
                 .expiresAt(now.plus(7, ChronoUnit.DAYS))
                 .subject(user.getId().toString())
-                .claim("scope", user.getRole())
+                .claim("type", "refresh") // можно различать по claim
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

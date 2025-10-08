@@ -34,8 +34,7 @@ public class UserService {
 
     public User getByUsername(String username) {
         return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("user with name %s not found", username)));
     }
 
     public UserDetailsService userDetailsService() {

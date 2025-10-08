@@ -27,4 +27,10 @@ public class AuthManagementService {
         String token = jwtService.generateToken(savedUser);
         return new AuthenticationResult(savedUser, token);
     }
+
+    public AuthenticationResult login(User user) {
+        user = userService.getByUsername(user.getUsername());
+        String token = jwtService.generateToken(user);
+        return new AuthenticationResult(user, token);
+    }
 }

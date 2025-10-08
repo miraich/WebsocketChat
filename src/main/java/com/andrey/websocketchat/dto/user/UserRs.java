@@ -7,5 +7,4 @@ public record UserRs(
         String username,
         String role
 ) {
-
 }

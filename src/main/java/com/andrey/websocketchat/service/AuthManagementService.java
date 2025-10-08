@@ -17,7 +17,6 @@ public class AuthManagementService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-
     public AuthenticationResult registerUser(User user) {
         if (userService.existsByName(user.getUsername())) {
             throw new EntityAlreadyExistsException(String.format("User with name %s already exists", user.getUsername()));

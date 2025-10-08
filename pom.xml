@@ -160,7 +160,7 @@
                     <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
                     <failOnError>true</failOnError>
                     <skipTestScope>true</skipTestScope>
-                    <nvdApiKey>${nvd.api.key}</nvdApiKey>
+                    <nvdApiKey>${NVD_API_KEY}</nvdApiKey>
                 </configuration>
                 <executions>
                     <execution>
@@ -171,19 +171,19 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sonar-analysis</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sonar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.sonarsource.scanner.maven</groupId>-->
+<!--                <artifactId>sonar-maven-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sonar-analysis</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sonar</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

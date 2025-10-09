@@ -23,7 +23,7 @@ public class JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("websocket-chat-app")
                 .issuedAt(now)
-                .expiresAt(now.plus(30, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))
                 .subject(user.getId().toString())
                 .claim("role", user.getRole())
                 .claim("username", user.getUsername())

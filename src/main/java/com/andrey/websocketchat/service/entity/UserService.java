@@ -1,7 +1,7 @@
 package com.andrey.websocketchat.service.entity;
 
-import com.andrey.websocketchat.model.User;
 import com.andrey.websocketchat.exception.EntityAlreadyExistsException;
+import com.andrey.websocketchat.model.User;
 import com.andrey.websocketchat.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +19,7 @@ public class UserService {
     }
 
     public User create(User user) {
-        if (repository.existsByUsername(user.getUsername())) {
+        if (existsByName(user.getUsername())) {
             throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
         }
         return save(user);

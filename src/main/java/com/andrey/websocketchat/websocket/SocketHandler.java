@@ -13,38 +13,37 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class ChatHandler extends TextWebSocketHandler {
+public class SocketHandler extends TextWebSocketHandler {
 
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);
         System.out.println("Новое соединение: " + session.getId() + ", всего: " + sessions.size());
-
-        String welcomeMessage = "[Система] Добро пожаловать в чат! Подключено пользователей: " + sessions.size();
+        String welcomeMessage = "Добро пожаловать в чат! Подключено пользователей: " + sessions.size();
         sendMessageToSession(session, welcomeMessage);
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
         String formattedMessage = formatMessage(payload);
         broadcastMessage(formattedMessage);
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
         System.err.println("Ошибка транспорта для сессии " + session.getId() + ": " + exception.getMessage());
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) {
         sessions.remove(session);
         System.out.println("Соединение закрыто: " + session.getId() + ", причина: " + closeStatus.getReason());
 
-        String userLeftMessage = "[Система] Пользователь отключился. Подключено: " + sessions.size();
+        String userLeftMessage = "Пользователь отключился. Подключено: " + sessions.size();
         broadcastMessage(userLeftMessage);
     }
 

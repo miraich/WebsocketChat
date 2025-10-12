@@ -16,13 +16,12 @@ services:
       retries: 10
 
   backend:
-    build: .
-    #    image: atread/websocker_chat:v0.0.2
+#    build: .
+    image: atread/websocker_chat:v0.0.2
     container_name: websocket-chat-app
     pull_policy: always
     environment:
       DB_PASSWORD: testPwd
-      DB_HOST: postgres
       REDIS_HOST: redis
       REDIS_PORT: 6379
       PRIVATE_KEY_LOCATION: file:/app/certs/private.pem

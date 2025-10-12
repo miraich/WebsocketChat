@@ -6,7 +6,7 @@ import org.mapstruct.ReportingPolicy;
 
 @MapperConfig(
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.WARN
+        unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface MapstructConfig {
 }

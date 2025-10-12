@@ -9,6 +9,19 @@ spring:
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
+  session:
+    redis:
+      repository-type: default
+      namespace: spring:session
+      flush-mode: on_save
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+#      password: ${REDIS_PASSWORD:def_pwd}
+
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -20,6 +33,7 @@ spring:
       resourceserver:
         jwt:
           public-key-location: classpath:certs/public.pem
+
 rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
+  private-key: ${PRIVATE_KEY_LOCATION:classpath:certs/private.pem}
+  public-key: ${PUBLIC_KEY_LOCATION:classpath:certs/public.pem}

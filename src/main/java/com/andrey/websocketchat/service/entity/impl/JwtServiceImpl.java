@@ -1,7 +1,9 @@
-package com.andrey.websocketchat.service.impl;
+package com.andrey.websocketchat.service.entity.impl;
 
 import com.andrey.websocketchat.enums.TokenType;
 import com.andrey.websocketchat.model.UserPrincipal;
+import com.andrey.websocketchat.repository.BlacklistTokenRepository;
+import com.andrey.websocketchat.service.entity.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
@@ -20,10 +22,32 @@ import java.util.List;
 @Service
 @Profile("!test")
 @RequiredArgsConstructor
-public class JwtServiceImpl {
+public class JwtServiceImpl implements JwtService {
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
+    private final BlacklistTokenRepository blacklistTokenRepository;
 
+    @Override
+    public boolean isRefreshTokenBlacklisted(String token) {
+        return blacklistTokenRepository.isRefreshTokenBlacklisted(token);
+    }
+
+    @Override
+    public boolean isAccessTokenBlacklisted(String refreshToken) {
+        return blacklistTokenRepository.isAccessTokenBlacklisted(refreshToken);
+    }
+
+    @Override
+    public void blacklistRefreshToken(String refreshToken, Instant expiresAt) {
+        blacklistTokenRepository.blacklistRefreshToken(refreshToken, expiresAt);
+    }
+
+    @Override
+    public void blacklistAccessToken(String refreshToken, Instant expiresAt) {
+        blacklistTokenRepository.blacklistAccessToken(refreshToken, expiresAt);
+    }
+
+    @Override
     public String generateToken(Authentication auth, TokenType tokenType, long expiresInAmount, ChronoUnit chronoUnit) {
         Instant now = Instant.now();
         UserPrincipal userDetails = (UserPrincipal) auth.getPrincipal();
@@ -45,13 +69,13 @@ public class JwtServiceImpl {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
+    @Override
     public Jwt decode(String token) {
         return jwtDecoder.decode(token);
     }
 
-    public boolean isTokenExpired(String refreshToken) {
-        Jwt jwt = jwtDecoder.decode(refreshToken);
-        Instant expiresAt = jwt.getExpiresAt();
-        return expiresAt != null && Instant.now().isAfter(expiresAt);
+    @Override
+    public boolean isRefreshToken(Jwt jwt) {
+        return jwt.hasClaim("type") && jwt.getClaims().get("type").equals("refreshToken");
     }
 }

@@ -1,27 +1,69 @@
 services:
   postgres:
-    image: postgres
+    image: postgres:latest
     container_name: postgres-db
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: testPwd
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
-    #    build: .
-    image: atread/websocker_chat:v0.0.2
+    build: .
+    #     image: atread/websocker_chat:v0.0.2
     container_name: websocket-chat-app
-    pull_policy: always
+#    pull_policy: always
     environment:
+      DB_PASSWORD: postgres
       DB_HOST: postgres
+      PRIVATE_KEY_LOCATION: file:/app/certs/private.pem
+      PUBLIC_KEY_LOCATION: file:/app/certs/public.pem
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      watchtower:
+        condition: service_started
     restart: unless-stopped
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+#    environment:
+#      - REDIS_PASSWORD=def_pwd
+#      - REDIS_USER=atread
+#      - REDIS_USER_PASSWORD=atread_pwd
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
 
   watchtower:
     image: containrrr/watchtower
@@ -30,5 +72,12 @@ services:
     command: --interval 5 --cleanup
     restart: always
 
+  redis_insight:
+    image: redis/redisinsight
+    container_name: redis_insight
+    ports:
+      - "5540:5540"
+
 volumes:
   postgres_data:
+  redis_data:

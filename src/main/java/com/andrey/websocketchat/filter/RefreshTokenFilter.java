@@ -1,30 +1,47 @@
 package com.andrey.websocketchat.filter;
 
-import com.andrey.websocketchat.service.entity.TokenService;
+import com.andrey.websocketchat.service.entity.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class JwtBlacklistFilter extends OncePerRequestFilter {
-    private final TokenService tokenService;
+@Profile("!test")
+public class RefreshTokenFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+
+        return !path.startsWith("/api/auth/logout")
+                && !path.startsWith("/api/auth/refresh");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String refreshToken = Objects.requireNonNull(WebUtils.getCookie(request, "refreshToken")).getValue();
+        Cookie refreshTokenCookie = WebUtils.getCookie(request, "refreshToken");
+        if (refreshTokenCookie == null || refreshTokenCookie.getValue() == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-        if (tokenService.isRefreshTokenBlacklisted(refreshToken)) {
+        Jwt jwt = jwtService.decode(refreshTokenCookie.getValue());
+
+        if (!jwtService.isRefreshToken(jwt) || jwtService.isRefreshTokenBlacklisted(jwt.getTokenValue())) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

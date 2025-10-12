@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Repository
 @RequiredArgsConstructor
 @Profile("!test")
-public class RefreshTokenRepository {
+public class BlacklistTokenRepository {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public static final String REFRESH_BLACKLIST_PREFIX = "blacklist:refresh:";

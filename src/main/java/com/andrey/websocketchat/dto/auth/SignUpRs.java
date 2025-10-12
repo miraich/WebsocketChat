@@ -9,6 +9,6 @@ import lombok.extern.jackson.Jacksonized;
 public record SignUpRs(
         UserRs user,
 
-        String token
+        String accessToken
 ) {
 }

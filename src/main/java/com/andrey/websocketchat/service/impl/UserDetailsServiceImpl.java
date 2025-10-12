@@ -1,4 +1,4 @@
-package com.andrey.websocketchat.service;
+package com.andrey.websocketchat.service.impl;
 
 import com.andrey.websocketchat.model.User;
 import com.andrey.websocketchat.model.UserPrincipal;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserService userService;
 
     @Override

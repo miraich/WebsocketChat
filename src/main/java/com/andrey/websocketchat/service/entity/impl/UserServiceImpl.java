@@ -3,6 +3,7 @@ package com.andrey.websocketchat.service.entity.impl;
 import com.andrey.websocketchat.exception.EntityAlreadyExistsException;
 import com.andrey.websocketchat.model.User;
 import com.andrey.websocketchat.repository.UserRepository;
+import com.andrey.websocketchat.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     public User save(User user) {

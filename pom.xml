@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.andrey</groupId>
     <artifactId>WebsocketChat</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>WebsocketChat</name>
     <description>WebsocketChat</description>
     <url/>
@@ -76,6 +76,14 @@
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.6.3</version>
@@ -113,7 +121,6 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <configLocation>check_style.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
@@ -157,7 +164,7 @@
                 <configuration>
                     <format>HTML</format>
                     <formats>HTML,XML,JSON</formats>
-                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                    <failBuildOnCVSS>0</failBuildOnCVSS>
                     <failOnError>true</failOnError>
                     <skipTestScope>true</skipTestScope>
                     <nvdApiKey>${NVD_API_KEY}</nvdApiKey>

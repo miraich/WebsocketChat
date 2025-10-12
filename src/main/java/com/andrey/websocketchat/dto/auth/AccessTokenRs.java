@@ -5,7 +5,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Builder(toBuilder = true)
-public record RefreshTokenRs(
-        String refreshToken
+public record AccessTokenRs(
+        String accessToken
 ) {
 }

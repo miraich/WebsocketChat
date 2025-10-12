@@ -16,6 +16,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler(JwtException.class)
+//    public ErrorRs handleJwtException(JwtException e) {
+//        return new ErrorRs(Map.of("message", e.getMessage()));
+//    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorRs handleBadCredentialsException(BadCredentialsException e) {

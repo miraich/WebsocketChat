@@ -4,6 +4,7 @@ import com.andrey.websocketchat.dto.error.ErrorRs;
 import com.andrey.websocketchat.exception.EntityAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,11 +17,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    @ExceptionHandler(JwtException.class)
-//    public ErrorRs handleJwtException(JwtException e) {
-//        return new ErrorRs(Map.of("message", e.getMessage()));
-//    }
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(JwtException.class)
+    public ErrorRs handleJwtException(JwtException e) {
+        return new ErrorRs(Map.of("message", e.getMessage()));
+    }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)

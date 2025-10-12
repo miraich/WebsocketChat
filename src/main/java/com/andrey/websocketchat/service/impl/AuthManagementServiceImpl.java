@@ -84,19 +84,19 @@ public class AuthManagementServiceImpl implements AuthManagementService {
                 null,
                 userDetails.getAuthorities()
         );
-        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 30, ChronoUnit.MINUTES);
+        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
         return new AccessToken(accessToken);
     }
 
     private AuthenticationResult generateTokensCreateRs(User user, HttpServletResponse response, Authentication auth) {
-        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 30, ChronoUnit.MINUTES);
-        String refreshToken = jwtServiceImpl.generateToken(auth, TokenType.refreshToken, 7, ChronoUnit.DAYS);
+        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
+        String refreshToken = jwtServiceImpl.generateToken(auth, TokenType.refreshToken, 1, ChronoUnit.DAYS);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(false)
                 .path("/api/auth")
-                .maxAge(Duration.of(7, ChronoUnit.DAYS))
+                .maxAge(Duration.of(1, ChronoUnit.DAYS))
                 .sameSite("Strict")
                 .build();
 

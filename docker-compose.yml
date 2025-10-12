@@ -4,8 +4,8 @@ services:
     container_name: postgres-db
     environment:
       POSTGRES_PASSWORD: testPwd
-    ports:
-      - "5432:5432"
+    #    ports:
+    #      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -17,12 +17,14 @@ services:
 
   backend:
     build: .
-    #     image: atread/websocker_chat:v0.0.2
+    #    image: atread/websocker_chat:v0.0.2
     container_name: websocket-chat-app
-#    pull_policy: always
+    pull_policy: always
     environment:
-      DB_PASSWORD: postgres
+      DB_PASSWORD: testPwd
       DB_HOST: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       PRIVATE_KEY_LOCATION: file:/app/certs/private.pem
       PUBLIC_KEY_LOCATION: file:/app/certs/public.pem
     ports:
@@ -40,12 +42,13 @@ services:
   redis:
     image: redis:latest
     container_name: redis
-#    environment:
-#      - REDIS_PASSWORD=def_pwd
-#      - REDIS_USER=atread
-#      - REDIS_USER_PASSWORD=atread_pwd
-    ports:
-      - "6380:6379"
+    environment:
+      - REDIS_PASSWORD=def_pwd
+      - REDIS_HOST=redis
+    #      - REDIS_USER=atread
+    #      - REDIS_USER_PASSWORD=atread_pwd
+    #    ports:
+    #      - "6380:6379"
     volumes:
       - redis_data:/data
     deploy:
@@ -72,11 +75,11 @@ services:
     command: --interval 5 --cleanup
     restart: always
 
-  redis_insight:
-    image: redis/redisinsight
-    container_name: redis_insight
-    ports:
-      - "5540:5540"
+#  redis_insight:
+#    image: redis/redisinsight
+#    container_name: redis_insight
+#    ports:
+#      - "5540:5540"
 
 volumes:
   postgres_data:

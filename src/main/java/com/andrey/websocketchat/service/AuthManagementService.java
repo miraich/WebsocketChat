@@ -13,5 +13,5 @@ public interface AuthManagementService {
 
     void logout(String refreshToken, Jwt accessToken);
 
-    AccessToken refresh(String refreshToken);
+    AccessToken refresh(String refreshToken, HttpServletResponse response);
 }

@@ -5,5 +5,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Builder(toBuilder = true)
-public record AuthenticationResult(User user, String accessToken) {
+public record AuthenticationResult(
+        UserPrincipal userPrincipal, String accessToken
+) {
 }

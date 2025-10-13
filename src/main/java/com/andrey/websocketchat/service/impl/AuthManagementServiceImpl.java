@@ -9,7 +9,6 @@ import com.andrey.websocketchat.model.UserPrincipal;
 import com.andrey.websocketchat.service.AuthManagementService;
 import com.andrey.websocketchat.service.entity.JwtService;
 import com.andrey.websocketchat.service.entity.UserService;
-import com.andrey.websocketchat.service.entity.impl.JwtServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +36,6 @@ public class AuthManagementServiceImpl implements AuthManagementService {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final PasswordEncoder encoder;
-    private final JwtServiceImpl jwtServiceImpl;
 
     public AuthenticationResult registerUser(User user, HttpServletResponse response) {
         if (userService.existsByName(user.getUsername())) {
@@ -52,7 +50,7 @@ public class AuthManagementServiceImpl implements AuthManagementService {
                 null,
                 userPrincipal.getAuthorities()
         );
-        return generateTokensCreateRs(savedUser, response, auth);
+        return generateTokensCreateRs(response, auth);
     }
 
     public AuthenticationResult login(User user, HttpServletResponse response) {
@@ -64,43 +62,53 @@ public class AuthManagementServiceImpl implements AuthManagementService {
                                     user.getPassword()
                             )
                     );
-            return generateTokensCreateRs(user, response, auth);
+            return generateTokensCreateRs(response, auth);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
     }
 
     public void logout(String refreshToken, Jwt accessToken) {
-        Jwt jwt = jwtServiceImpl.decode(refreshToken);
+        Jwt jwt = jwtService.decode(refreshToken);
         jwtService.blacklistRefreshToken(refreshToken, jwt.getExpiresAt());
         jwtService.blacklistAccessToken(accessToken.getTokenValue(), jwt.getExpiresAt());
     }
 
-    public AccessToken refresh(String refreshToken) {
-        Jwt jwt = jwtServiceImpl.decode(refreshToken);
+    public AccessToken refresh(String refreshToken, HttpServletResponse response) {
+        Jwt jwt = jwtService.decode(refreshToken);
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwt.getClaimAsString("username"));
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,
                 userDetails.getAuthorities()
         );
-        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
+        String accessToken = jwtService.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
+        String refreshTokenGen = jwtService.generateToken(auth, TokenType.refreshToken, 1, ChronoUnit.DAYS);
+
+        jwtService.blacklistRefreshToken(refreshToken, jwt.getExpiresAt());
+        ResponseCookie refreshCookie = generateRefreshCookie(refreshTokenGen);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         return new AccessToken(accessToken);
     }
 
-    private AuthenticationResult generateTokensCreateRs(User user, HttpServletResponse response, Authentication auth) {
-        String accessToken = jwtServiceImpl.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
-        String refreshToken = jwtServiceImpl.generateToken(auth, TokenType.refreshToken, 1, ChronoUnit.DAYS);
+    private AuthenticationResult generateTokensCreateRs(HttpServletResponse response, Authentication auth) {
+        String accessToken = jwtService.generateToken(auth, TokenType.accessToken, 15, ChronoUnit.MINUTES);
+        String refreshToken = jwtService.generateToken(auth, TokenType.refreshToken, 1, ChronoUnit.DAYS);
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+        ResponseCookie refreshCookie = generateRefreshCookie(refreshToken);
+
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+        return new AuthenticationResult(user, accessToken);
+    }
+
+    private ResponseCookie generateRefreshCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(false)
                 .path("/api/auth")
                 .maxAge(Duration.of(1, ChronoUnit.DAYS))
                 .sameSite("Strict")
                 .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-        return new AuthenticationResult(user, accessToken);
     }
 }

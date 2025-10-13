@@ -36,13 +36,13 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public SignUpRs register(@RequestBody @Valid SignUpRq signUpRq, HttpServletResponse response) {
         AuthenticationResult result = authManagementService.registerUser(userMapper.map(signUpRq), response);
-        return authMapper.mapToSignUpRs(result.user(), result.accessToken());
+        return authMapper.mapToSignUpRs(result.userPrincipal(), result.accessToken());
     }
 
     @PostMapping("/login")
     public SignInRs login(@RequestBody @Valid SignInRq signInRq, HttpServletResponse response) {
         AuthenticationResult result = authManagementService.login(userMapper.map(signInRq), response);
-        return authMapper.mapToSignInRs(result.user(), result.accessToken());
+        return authMapper.mapToSignInRs(result.userPrincipal(), result.accessToken());
     }
 
     @PostMapping("/logout")
@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public AccessTokenRs refresh(@CookieValue("refreshToken") String refreshToken) {
-        return authMapper.map(authManagementService.refresh(refreshToken));
+    public AccessTokenRs refresh(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
+        return authMapper.map(authManagementService.refresh(refreshToken, response));
     }
 }

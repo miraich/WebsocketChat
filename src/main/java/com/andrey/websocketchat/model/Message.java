@@ -1,4 +1,4 @@
-package com.andrey.websocketchat.entity;
+package com.andrey.websocketchat.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
